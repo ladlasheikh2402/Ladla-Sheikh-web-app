@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Smart URL Shortener</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Poppins', sans-serif;
+      background: linear-gradient(to right, #667eea, #764ba2);
+      color: #fff;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+
+    .container {
+      max-width: 600px;
+      margin: auto;
+      padding: 40px 20px;
+      text-align: center;
+      animation: fadeIn 1.2s ease-in;
+    }
+
+    h1 {
+      font-size: 2.5rem;
+      margin-bottom: 20px;
+    }
+
+    input[type="text"] {
+      width: 80%;
+      padding: 12px;
+      border: none;
+      border-radius: 8px;
+      font-size: 16px;
+      margin-bottom: 20px;
+      transition: 0.3s;
+    }
+
+    button {
+      padding: 12px 24px;
+      background-color: #4ade80;
+      color: #000;
+      font-weight: 600;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    button:hover {
+      background-color: #22c55e;
+    }
+
+    .result {
+      margin-top: 20px;
+      font-size: 18px;
+      animation: fadeIn 1s ease-in-out;
+    }
+
+    a {
+      color: #bbf7d0;
+      text-decoration: underline;
+    }
+
+    footer {
+      text-align: center;
+      padding: 20px;
+      font-size: 14px;
+      background: rgba(0, 0, 0, 0.2);
+      margin-top: auto;
+    }
+
+    @keyframes fadeIn {
+      from {opacity: 0; transform: translateY(10px);}
+      to {opacity: 1; transform: translateY(0);}
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Smart URL Shortener</h1>
+    <input type="text" id="longUrl" placeholder="Paste your long URL here..." />
+    <br>
+    <button onclick="shortenUrl()">Generate Short Link</button>
+    <div class="result" id="result"></div>
+  </div>
+
+  <footer>
+    Join our WhatsApp Channel:
+    <a href="https://whatsapp.com/channel/0029VawH7muGpLHWRj7SoR3E" target="_blank">
+      Click here
+    </a>
+  </footer>
+
+  <script>
+    function shortenUrl() {
+      const longUrl = document.getElementById("longUrl").value;
+      const resultDiv = document.getElementById("result");
+      resultDiv.innerHTML = "Processing...";
+
+      if (!longUrl) {
+        resultDiv.innerHTML = "Please enter a valid URL.";
+        return;
+      }
+
+      fetch(`https://api.shrtco.de/v2/shorten?url=${encodeURIComponent(longUrl)}`)
+        .then(response => response.json())
+        .then(data => {
+          if (data.ok) {
+            resultDiv.innerHTML = `Short URL: <a href="${data.result.full_short_link}" target="_blank">${data.result.full_short_link}</a>`;
+          } else {
+            resultDiv.innerHTML = "Failed to shorten the URL.";
+          }
+        })
+        .catch(() => {
+          resultDiv.innerHTML = "An error occurred. Please try again.";
+        });
+    }
+  </script>
+</body>
+</html>
+
