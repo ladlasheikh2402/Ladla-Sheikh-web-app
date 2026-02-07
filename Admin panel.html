@@ -1,0 +1,1445 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ladla Sheikh Web - Admin Panel</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        :root {
+            /* Neumorphism Colors */
+            --bg-color: #e0e5ec;
+            --text-main: #4d4d4d;
+            --text-green: #00b341; /* Green Font */
+            
+            /* Shadows for 3D Effect */
+            --shadow-light: -9px -9px 16px rgba(255,255,255, 0.8);
+            --shadow-dark: 9px 9px 16px rgba(163,177,198, 0.6);
+            
+            /* Inner Shadows for Inputs */
+            --inner-shadow: inset 6px 6px 10px 0 rgba(163,177,198, 0.7), 
+                            inset -6px -6px 10px 0 rgba(255,255,255, 0.8);
+            
+            --glass-bg: rgba(224, 229, 236, 0.6);
+            --border-soft: 1px solid rgba(255,255,255,0.4);
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            overflow-x: hidden;
+        }
+
+        .hidden { display: none !important; }
+
+        /* Neumorphic Mixins via Classes */
+        .neu-flat {
+            background: var(--bg-color);
+            box-shadow: var(--shadow-dark), var(--shadow-light);
+            border-radius: 20px;
+            border: 1px solid rgba(255,255,255,0.2);
+        }
+
+        .neu-pressed {
+            background: var(--bg-color);
+            box-shadow: var(--inner-shadow);
+            border-radius: 15px;
+            border: none;
+        }
+
+        /* Login Page */
+        .login-page {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .login-container {
+            background: var(--bg-color);
+            box-shadow: var(--shadow-dark), var(--shadow-light);
+            border-radius: 30px;
+            padding: 50px;
+            max-width: 450px;
+            width: 100%;
+        }
+
+        .login-logo {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .login-logo img {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            border: 4px solid var(--bg-color);
+            box-shadow: var(--shadow-dark), var(--shadow-light);
+            margin-bottom: 20px;
+        }
+
+        .login-logo h1 {
+            font-size: 2rem;
+            color: var(--text-green);
+            font-weight: 700;
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 10px;
+            color: var(--text-main);
+            font-weight: 600;
+            padding-left: 10px;
+        }
+
+        .form-group input, 
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 15px;
+            background: var(--bg-color);
+            box-shadow: var(--inner-shadow); /* Dabba hua effect */
+            border-radius: 15px;
+            border: none;
+            color: var(--text-green);
+            font-size: 1rem;
+            outline: none;
+            transition: all 0.3s;
+        }
+        
+        .form-group input:focus {
+             box-shadow: inset 3px 3px 5px 0 rgba(163,177,198, 0.9), 
+                         inset -3px -3px 5px 0 rgba(255,255,255, 0.9);
+        }
+
+        .btn-submit {
+            width: 100%;
+            background: var(--bg-color);
+            color: var(--text-green);
+            border: none;
+            padding: 15px;
+            border-radius: 50px;
+            font-size: 1.1rem;
+            font-weight: 700;
+            cursor: pointer;
+            margin-top: 10px;
+            box-shadow: var(--shadow-dark), var(--shadow-light); /* Ubhra hua effect */
+            transition: all 0.3s ease;
+        }
+
+        .btn-submit:active {
+            box-shadow: var(--inner-shadow);
+            transform: translateY(2px);
+        }
+
+        /* Header */
+        .header {
+            background: rgba(224, 229, 236, 0.8);
+            backdrop-filter: blur(12px);
+            padding: 15px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 4px 15px rgba(163,177,198, 0.3);
+        }
+
+        .header-logo {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .header-logo img {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            box-shadow: var(--shadow-dark), var(--shadow-light);
+        }
+
+        .header-logo h2 {
+            color: var(--text-green);
+            font-size: 1.5rem;
+            text-transform: uppercase;
+        }
+
+        .header-stats {
+            display: flex;
+            gap: 30px;
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-item .number {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--text-green);
+            text-shadow: 1px 1px 2px rgba(255,255,255,1);
+        }
+
+        .stat-item .label {
+            font-size: 0.8rem;
+            color: var(--text-main);
+            font-weight: 500;
+        }
+
+        .menu-icon {
+            font-size: 1.8rem;
+            color: var(--text-green);
+            cursor: pointer;
+            display: none;
+            text-shadow: 2px 2px 4px rgba(163,177,198, 0.6);
+        }
+
+        /* Sidebar */
+        .sidebar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 280px;
+            height: 100vh;
+            background: var(--bg-color);
+            padding: 100px 20px 20px;
+            box-shadow: 5px 0 15px rgba(163,177,198, 0.4);
+            overflow-y: auto;
+            z-index: 90;
+        }
+
+        .sidebar-menu {
+            list-style: none;
+        }
+
+        .sidebar-menu li {
+            margin-bottom: 20px;
+        }
+
+        .sidebar-menu a {
+            color: var(--text-main);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 15px;
+            border-radius: 15px;
+            transition: all 0.3s;
+            font-size: 1rem;
+            font-weight: 500;
+            /* Flat look initially */
+        }
+
+        .sidebar-menu a:hover,
+        .sidebar-menu a.active {
+            /* Pressed Look for active */
+            box-shadow: var(--inner-shadow);
+            color: var(--text-green);
+        }
+
+        .sidebar-menu i {
+            font-size: 1.3rem;
+            width: 30px;
+            text-align: center;
+        }
+
+        /* Main Content */
+        .main-content {
+            margin-left: 280px;
+            padding: 40px;
+            min-height: 100vh;
+        }
+
+        .page-section {
+            display: none;
+            animation: fadeIn 0.5s;
+        }
+
+        .page-section.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .section-title {
+            font-size: 2rem;
+            color: var(--text-green);
+            margin-bottom: 30px;
+            font-weight: 700;
+            text-shadow: 2px 2px 4px rgba(255,255,255, 0.5);
+        }
+
+        /* Stats Cards */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+
+        .stat-card {
+            background: var(--bg-color);
+            box-shadow: var(--shadow-dark), var(--shadow-light);
+            border-radius: 20px;
+            padding: 30px;
+            text-align: center;
+            transition: all 0.3s;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .stat-card i {
+            font-size: 3rem;
+            color: var(--text-green);
+            margin-bottom: 15px;
+            text-shadow: 3px 3px 6px rgba(163,177,198, 0.5);
+        }
+
+        .stat-card h3 {
+            font-size: 2.5rem;
+            color: var(--text-main);
+            margin-bottom: 10px;
+        }
+
+        .stat-card p {
+            color: #888;
+            font-weight: 500;
+        }
+
+        /* User Card / List Items */
+        .user-card, .content-card {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            background: var(--bg-color);
+            box-shadow: var(--shadow-dark), var(--shadow-light); /* Floating card */
+            padding: 25px;
+            border-radius: 20px;
+            margin-bottom: 25px;
+            transition: all 0.3s;
+        }
+
+        .user-card img, .content-card img {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            border: 3px solid var(--bg-color);
+            box-shadow: var(--shadow-dark), var(--shadow-light);
+            object-fit: cover;
+        }
+        
+        .content-card img {
+            border-radius: 15px;
+            width: 120px;
+            height: 120px;
+        }
+
+        .user-info, .content-info {
+            flex: 1;
+        }
+
+        .user-info h4, .content-info h4 {
+            color: var(--text-green);
+            margin-bottom: 8px;
+            font-size: 1.2rem;
+            font-weight: 700;
+        }
+
+        .user-info p, .content-info p {
+            color: var(--text-main);
+            font-size: 0.95rem;
+            margin: 3px 0;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            margin-left: 10px;
+            box-shadow: var(--inner-shadow); /* Pressed in badge */
+        }
+
+        .badge-free { color: var(--text-green); }
+        .badge-paid { color: #0088cc; }
+        .badge-pending { color: #ccaa00; }
+
+        /* Buttons */
+        .btn-group {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 10px 25px;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+            font-family: 'Poppins', sans-serif;
+            font-size: 0.9rem;
+            background: var(--bg-color);
+            box-shadow: var(--shadow-dark), var(--shadow-light); /* Soft Button */
+            color: var(--text-main);
+        }
+        
+        .btn:active {
+            box-shadow: var(--inner-shadow);
+            transform: translateY(2px);
+        }
+
+        .btn-success { color: #00b341; }
+        .btn-danger { color: #ff3333; }
+        .btn-warning { color: #ffaa00; }
+        .btn-info { color: #00aaff; }
+        .btn-primary { color: var(--text-green); border: 1px solid rgba(0,255,0,0.1); }
+
+        .btn-add {
+            margin-bottom: 30px;
+            font-size: 1rem;
+            padding: 15px 30px;
+        }
+
+        /* Modal - Glassy Soft */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(224, 229, 236, 0.5); /* Semi transparent */
+            backdrop-filter: blur(8px);
+            z-index: 300;
+            padding: 20px;
+            overflow-y: auto;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: var(--bg-color);
+            box-shadow: 15px 15px 30px rgba(163,177,198, 0.7), -15px -15px 30px rgba(255,255,255, 0.9);
+            border-radius: 30px;
+            padding: 40px;
+            max-width: 700px;
+            width: 100%;
+            position: relative;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 25px;
+            right: 25px;
+            font-size: 1.8rem;
+            cursor: pointer;
+            color: var(--text-danger);
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            background: var(--bg-color);
+            box-shadow: var(--shadow-dark), var(--shadow-light);
+        }
+        
+        .modal-close:active {
+            box-shadow: var(--inner-shadow);
+        }
+
+        .modal h2 {
+            color: var(--text-green);
+            margin-bottom: 30px;
+            font-size: 1.8rem;
+            text-align: center;
+        }
+
+        /* Toast */
+        .toast {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background: var(--bg-color);
+            color: var(--text-green);
+            padding: 15px 30px;
+            border-radius: 15px;
+            font-weight: 600;
+            display: none;
+            z-index: 400;
+            box-shadow: var(--shadow-dark), var(--shadow-light);
+            animation: slideIn 0.3s;
+            border-left: 5px solid var(--text-green);
+        }
+
+        .toast.show {
+            display: block;
+        }
+
+        @keyframes slideIn {
+            from { transform: translateX(400px); }
+            to { transform: translateX(0); }
+        }
+
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .sidebar {
+                transform: translateX(-100%);
+                transition: transform 0.3s;
+                z-index: 150;
+            }
+
+            .sidebar.active {
+                transform: translateX(0);
+            }
+
+            .main-content {
+                margin-left: 0;
+            }
+
+            .menu-icon {
+                display: block;
+            }
+
+            .header-stats {
+                display: none;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .header {
+                padding: 15px 20px;
+            }
+
+            .header-logo h2 {
+                font-size: 1.2rem;
+            }
+
+            .main-content {
+                padding: 20px;
+            }
+
+            .user-card, .content-card {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .btn-group {
+                justify-content: center;
+            }
+
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .content-card img {
+                width: 100%;
+                height: 200px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Admin Panel -->
+    <div id="adminPanel">
+        <div class="header">
+            <div class="header-logo">
+                <img src="Sheikh.Ali.jpg" alt="Logo">
+                <h2>Ladla Sheikh Web Admin</h2>
+            </div>
+            <div class="header-stats">
+                <div class="stat-item">
+                    <div class="number" id="headerTotalUsers">0</div>
+                    <div class="label">Total Users</div>
+                </div>
+                <div class="stat-item">
+                    <div class="number" id="headerPendingUsers">0</div>
+                    <div class="label">Pending</div>
+                </div>
+                <div class="stat-item">
+                    <div class="number" id="headerTotalContent">0</div>
+                    <div class="label">Content</div>
+                </div>
+            </div>
+            <i class="fas fa-bars menu-icon" onclick="toggleSidebar()"></i>
+        </div>
+
+        <div id="sidebar" class="sidebar">
+            <ul class="sidebar-menu">
+                <li><a href="#" class="active" onclick="navigate('dashboard')"><i class="fas fa-chart-line"></i> Dashboard</a></li>
+                <li><a href="#" onclick="navigate('users')"><i class="fas fa-users"></i> All Users</a></li>
+                <li><a href="#" onclick="navigate('pending')"><i class="fas fa-clock"></i> Pending Approvals</a></li>
+                <li><a href="#" onclick="navigate('sourceCode')"><i class="fas fa-code"></i> Source Code</a></li>
+                <li><a href="#" onclick="navigate('courses')"><i class="fas fa-graduation-cap"></i> Courses</a></li>
+                <li><a href="#" onclick="navigate('tools')"><i class="fas fa-tools"></i> Tools</a></li>
+                <li><a href="#" onclick="navigate('notifications')"><i class="fas fa-bell"></i> Send Notification</a></li>
+                <li><a href="#" onclick="navigate('settings')"><i class="fas fa-cog"></i> Settings</a></li>
+                <li><a href="#" onclick="logout()"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
+            </ul>
+        </div>
+
+        <div class="main-content">
+            <!-- Dashboard -->
+            <div id="dashboardSection" class="page-section active">
+                <h2 class="section-title"><i class="fas fa-chart-line"></i> Dashboard</h2>
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <i class="fas fa-users"></i>
+                        <h3 id="totalUsers">0</h3>
+                        <p>Total Users</p>
+                    </div>
+                    <div class="stat-card">
+                        <i class="fas fa-clock"></i>
+                        <h3 id="pendingUsers">0</h3>
+                        <p>Pending Approvals</p>
+                    </div>
+                    <div class="stat-card">
+                        <i class="fas fa-crown"></i>
+                        <h3 id="vipUsers">0</h3>
+                        <p>VIP Users</p>
+                    </div>
+                    <div class="stat-card">
+                        <i class="fas fa-folder"></i>
+                        <h3 id="totalContent">0</h3>
+                        <p>Total Content</p>
+                    </div>
+                </div>
+
+                <h3 style="color: var(--text-green); margin-bottom: 20px;">Recent Activity</h3>
+                <div id="recentActivity"></div>
+            </div>
+
+            <!-- All Users -->
+            <div id="usersSection" class="page-section">
+                <h2 class="section-title"><i class="fas fa-users"></i> All Users</h2>
+                <button class="btn btn-primary btn-add" onclick="showAddUserModal()">
+                    <i class="fas fa-plus"></i> Add New User
+                </button>
+                <div id="usersList"></div>
+            </div>
+
+            <!-- Pending Approvals -->
+            <div id="pendingSection" class="page-section">
+                <h2 class="section-title"><i class="fas fa-clock"></i> Pending Approvals</h2>
+                <div id="pendingList"></div>
+            </div>
+
+            <!-- Source Code -->
+            <div id="sourceCodeSection" class="page-section">
+                <h2 class="section-title"><i class="fas fa-code"></i> Source Code</h2>
+                <button class="btn btn-primary btn-add" onclick="showAddContentModal('sourceCode')">
+                    <i class="fas fa-plus"></i> Add Source Code
+                </button>
+                <div id="sourceCodeList"></div>
+            </div>
+
+            <!-- Courses -->
+            <div id="coursesSection" class="page-section">
+                <h2 class="section-title"><i class="fas fa-graduation-cap"></i> Courses</h2>
+                <button class="btn btn-primary btn-add" onclick="showAddContentModal('courses')">
+                    <i class="fas fa-plus"></i> Add Course
+                </button>
+                <div id="coursesList"></div>
+            </div>
+
+            <!-- Tools -->
+            <div id="toolsSection" class="page-section">
+                <h2 class="section-title"><i class="fas fa-tools"></i> Tools</h2>
+                <button class="btn btn-primary btn-add" onclick="showAddContentModal('tools')">
+                    <i class="fas fa-plus"></i> Add Tool
+                </button>
+                <div id="toolsList"></div>
+            </div>
+
+            <!-- Notifications -->
+            <div id="notificationsSection" class="page-section">
+                <h2 class="section-title"><i class="fas fa-bell"></i> Send Notification</h2>
+                <div style="max-width: 700px;">
+                    <form onsubmit="sendNotification(event)">
+                        <div class="form-group">
+                            <label>Send To</label>
+                            <select id="notifTarget" required>
+                                <option value="all">All Users</option>
+                                <option value="vip">VIP Users Only</option>
+                                <option value="free">Free Users Only</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Message</label>
+                            <textarea id="notifMessage" rows="6" required placeholder="Enter notification message..."></textarea>
+                        </div>
+                        <button type="submit" class="btn-submit">
+                            <i class="fas fa-paper-plane"></i> Send Notification
+                        </button>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Settings -->
+            <div id="settingsSection" class="page-section">
+                <h2 class="section-title"><i class="fas fa-cog"></i> Settings</h2>
+                <div style="max-width: 700px;">
+                    <form onsubmit="saveSettings(event)">
+                        <div class="form-group">
+                            <label>Demo Video URL</label>
+                            <input type="url" id="settingVideo" placeholder="https://example.com/video.mp4">
+                        </div>
+                        <div class="form-group">
+                            <label>Slider Image 1 URL</label>
+                            <input type="url" id="settingSlide1" placeholder="https://example.com/slide1.jpg">
+                        </div>
+                        <div class="form-group">
+                            <label>Slider Image 2 URL</label>
+                            <input type="url" id="settingSlide2" placeholder="https://example.com/slide2.jpg">
+                        </div>
+                        <div class="form-group">
+                            <label>Slider Image 3 URL</label>
+                            <input type="url" id="settingSlide3" placeholder="https://example.com/slide3.jpg">
+                        </div>
+                        <div class="form-group">
+                            <label>WhatsApp Number</label>
+                            <input type="tel" id="settingWhatsApp" placeholder="+92 335 0963366">
+                        </div>
+                        <div class="form-group">
+                            <label>Support Email</label>
+                            <input type="email" id="settingEmail" placeholder="support@famofc.com">
+                        </div>
+                        <div class="form-group">
+                            <label>YouTube Channel</label>
+                            <input type="url" id="settingYoutube" placeholder="https://youtube.com/@famofc">
+                        </div>
+                        <button type="submit" class="btn-submit">
+                            <i class="fas fa-save"></i> Save Settings
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add User Modal -->
+    <div id="addUserModal" class="modal">
+        <div class="modal-content">
+            <i class="fas fa-times modal-close" onclick="closeAddUserModal()"></i>
+            <h2><i class="fas fa-user-plus"></i> Add New User</h2>
+            <form onsubmit="addUser(event)">
+                <div class="form-group">
+                    <label>Full Name</label>
+                    <input type="text" id="userName" required>
+                </div>
+                <div class="form-group">
+                    <label>Email</label>
+                    <input type="email" id="userEmail" required>
+                </div>
+                <div class="form-group">
+                    <label>Phone</label>
+                    <input type="tel" id="userPhone" required>
+                </div>
+                <div class="form-group">
+                    <label>Profile Image URL</label>
+                    <input type="url" id="userProfilePic" placeholder="https://example.com/image.jpg">
+                </div>
+                <div class="form-group">
+                    <label>Username</label>
+                    <input type="text" id="userUsername" required>
+                </div>
+                <div class="form-group">
+                    <label>Password</label>
+                    <input type="password" id="userPassword" required>
+                </div>
+                <div class="form-group">
+                    <label>Plan</label>
+                    <select id="userPlan" required>
+                        <option value="Free">Free</option>
+                        <option value="Basic">Basic (1 Week)</option>
+                        <option value="Pro">Pro (1 Month)</option>
+                        <option value="Ultimate">Ultimate (1 Year)</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Payment Method</label>
+                    <select id="userPayment" required>
+                        <option value="N/A">N/A</option>
+                        <option value="JazzCash">JazzCash</option>
+                        <option value="EasyPaisa">EasyPaisa</option>
+                        <option value="Bank Transfer">Bank Transfer</option>
+                    </select>
+                </div>
+                <button type="submit" class="btn-submit">
+                    <i class="fas fa-plus"></i> Add User
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Add/Edit Content Modal -->
+    <div id="addContentModal" class="modal">
+        <div class="modal-content">
+            <i class="fas fa-times modal-close" onclick="closeAddContentModal()"></i>
+            <h2 id="contentModalTitle"><i class="fas fa-plus"></i> Add Content</h2>
+            <form onsubmit="saveContent(event)">
+                <input type="hidden" id="contentId">
+                <input type="hidden" id="contentType">
+                
+                <div class="form-group">
+                    <label>Title</label>
+                    <input type="text" id="contentTitle" required>
+                </div>
+                <div class="form-group">
+                    <label>Thumbnail/Poster URL</label>
+                    <input type="url" id="contentThumbnail" required>
+                </div>
+                <div class="form-group">
+                    <label>Description</label>
+                    <textarea id="contentDescription" rows="4" required></textarea>
+                </div>
+                <div class="form-group">
+                    <label>Category</label>
+                    <input type="text" id="contentCategory" required placeholder="e.g., Web Development, Python, Hacking">
+                </div>
+                <div class="form-group" id="demoUrlGroup">
+                    <label>Demo Source Code URL (Optional)</label>
+                    <input type="url" id="contentDemoUrl" placeholder="https://example.com/demo">
+                </div>
+                <div class="form-group">
+                    <label>Download/Learn Link</label>
+                    <input type="url" id="contentDownloadLink" required>
+                </div>
+                <div class="form-group" id="toolTypeGroup" style="display:none;">
+                    <label>Tool Type</label>
+                    <select id="toolType">
+                        <option value="details">Details + Download</option>
+                        <option value="direct">Direct Link</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Access Type</label>
+                    <select id="contentAccessType" required>
+                        <option value="Free">Free</option>
+                        <option value="Paid">Paid (VIP Only)</option>
+                    </select>
+                </div>
+                <button type="submit" class="btn-submit">
+                    <i class="fas fa-save"></i> Save Content
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Edit User Modal -->
+    <div id="editUserModal" class="modal">
+        <div class="modal-content">
+            <i class="fas fa-times modal-close" onclick="closeEditUserModal()"></i>
+            <h2><i class="fas fa-user-edit"></i> Edit User</h2>
+            <form onsubmit="updateUser(event)">
+                <input type="hidden" id="editUserId">
+                
+                <div class="form-group">
+                    <label>Full Name</label>
+                    <input type="text" id="editUserName" required>
+                </div>
+                <div class="form-group">
+                    <label>Email</label>
+                    <input type="email" id="editUserEmail" required>
+                </div>
+                <div class="form-group">
+                    <label>Phone</label>
+                    <input type="tel" id="editUserPhone" required>
+                </div>
+                <div class="form-group">
+                    <label>Profile Image URL</label>
+                    <input type="url" id="editUserProfilePic">
+                </div>
+                <div class="form-group">
+                    <label>Plan</label>
+                    <select id="editUserPlan" required>
+                        <option value="Free">Free</option>
+                        <option value="Basic">Basic (1 Week)</option>
+                        <option value="Pro">Pro (1 Month)</option>
+                        <option value="Ultimate">Ultimate (1 Year)</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Payment Method</label>
+                    <select id="editUserPayment" required>
+                        <option value="N/A">N/A</option>
+                        <option value="JazzCash">JazzCash</option>
+                        <option value="EasyPaisa">EasyPaisa</option>
+                        <option value="Bank Transfer">Bank Transfer</option>
+                    </select>
+                </div>
+                <button type="submit" class="btn-submit">
+                    <i class="fas fa-save"></i> Update User
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <div id="toast" class="toast"></div>
+
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+
+    <script>
+        const firebaseConfig = {
+  apiKey: "AIzaSyDBS8e_API1jSC9JIe3-kgjxbPfzU1xB3I",
+  authDomain: "ladla-sheikh-web-app-145c7.firebaseapp.com",
+  databaseURL: "https://ladla-sheikh-web-app-145c7-default-rtdb.firebaseio.com",
+  projectId: "ladla-sheikh-web-app-145c7",
+  storageBucket: "ladla-sheikh-web-app-145c7.firebasestorage.app",
+  messagingSenderId: "314981797490",
+  appId: "1:314981797490:web:6d79b1557fbc74197d7ceb",
+  measurementId: "G-E2KDS23E0Z"
+};
+
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.database();
+
+        const sanitize = (str) => str.replace(/[.#$[\]]/g, "_");
+
+        // Auto-load Dashboard on page load
+        document.addEventListener('DOMContentLoaded', () => {
+            loadDashboard();
+        });
+
+        // Load Dashboard
+        function loadDashboard() {
+            loadStats();
+            loadAllUsers();
+            loadPendingUsers();
+            loadContent('sourceCode');
+            loadContent('courses');
+            loadContent('tools');
+            loadSettings();
+            loadRecentActivity();
+        }
+
+        function loadStats() {
+            db.ref('users').on('value', snapshot => {
+                let total = 0, pending = 0, vip = 0;
+                
+                snapshot.forEach(child => {
+                    const user = child.val();
+                    total++;
+                    if (user.status === 'pending') pending++;
+                    if (user.plan !== 'Free') vip++;
+                });
+                
+                document.getElementById('totalUsers').textContent = total;
+                document.getElementById('pendingUsers').textContent = pending;
+                document.getElementById('vipUsers').textContent = vip;
+                document.getElementById('headerTotalUsers').textContent = total;
+                document.getElementById('headerPendingUsers').textContent = pending;
+            });
+
+            let totalContent = 0;
+            db.ref('content').once('value').then(snapshot => {
+                snapshot.forEach(type => {
+                    totalContent += type.numChildren();
+                });
+                document.getElementById('totalContent').textContent = totalContent;
+                document.getElementById('headerTotalContent').textContent = totalContent;
+            });
+        }
+
+        function loadRecentActivity() {
+            db.ref('users').orderByChild('createdAt').limitToLast(5).once('value').then(snapshot => {
+                const list = document.getElementById('recentActivity');
+                list.innerHTML = '';
+                
+                const users = [];
+                snapshot.forEach(child => {
+                    users.unshift({key: child.key, ...child.val()});
+                });
+                
+                users.forEach(user => {
+                    list.innerHTML += `
+                        <div class="user-card">
+                            <img src="${user.profilePic}" alt="${user.name}">
+                            <div class="user-info">
+                                <h4>${user.name} <span class="badge badge-${user.status === 'pending' ? 'pending' : user.plan === 'Free' ? 'free' : 'paid'}">${user.status === 'pending' ? 'Pending' : user.plan}</span></h4>
+                                <p>Registered: ${new Date(user.createdAt).toLocaleString()}</p>
+                            </div>
+                        </div>
+                    `;
+                });
+            });
+        }
+
+        function loadAllUsers() {
+            db.ref('users').on('value', snapshot => {
+                const list = document.getElementById('usersList');
+                list.innerHTML = '';
+                
+                snapshot.forEach(child => {
+                    const user = child.val();
+                    if (user.status === 'active') {
+                        const expiry = user.planExpiry ? new Date(user.planExpiry).toLocaleDateString() : 'No expiry';
+                        list.innerHTML += `
+                            <div class="user-card">
+                                <img src="${user.profilePic}" alt="${user.name}">
+                                <div class="user-info">
+                                    <h4>${user.name} <span class="badge badge-${user.plan === 'Free' ? 'free' : 'paid'}">${user.plan}</span></h4>
+                                    <p><i class="fas fa-envelope"></i> ${user.email}</p>
+                                    <p><i class="fas fa-phone"></i> ${user.phone}</p>
+                                    <p><i class="fas fa-credit-card"></i> Payment: ${user.paymentMethod}</p>
+                                    <p><i class="fas fa-calendar"></i> Expires: ${expiry}</p>
+                                </div>
+                                <div class="btn-group">
+                                    <button class="btn btn-info" onclick="showEditUserModal('${child.key}')">
+                                        <i class="fas fa-edit"></i> Edit
+                                    </button>
+                                    <button class="btn btn-warning" onclick="suspendUser('${child.key}')">
+                                        <i class="fas fa-ban"></i> Suspend
+                                    </button>
+                                    <button class="btn btn-danger" onclick="deleteUser('${child.key}')">
+                                        <i class="fas fa-trash"></i> Delete
+                                    </button>
+                                </div>
+                            </div>
+                        `;
+                    }
+                });
+            });
+        }
+
+        function loadPendingUsers() {
+            db.ref('users').on('value', snapshot => {
+                const list = document.getElementById('pendingList');
+                list.innerHTML = '';
+                let hasPending = false;
+                
+                snapshot.forEach(child => {
+                    const user = child.val();
+                    if (user.status === 'pending') {
+                        hasPending = true;
+                        list.innerHTML += `
+                            <div class="user-card">
+                                <img src="${user.profilePic}" alt="${user.name}">
+                                <div class="user-info">
+                                    <h4>${user.name} <span class="badge badge-pending">Pending</span></h4>
+                                    <p><i class="fas fa-envelope"></i> ${user.email}</p>
+                                    <p><i class="fas fa-phone"></i> ${user.phone}</p>
+                                    <p><i class="fas fa-crown"></i> Plan: ${user.plan}</p>
+                                    <p><i class="fas fa-credit-card"></i> Payment: ${user.paymentMethod}</p>
+                                    <p><i class="fas fa-calendar"></i> Registered: ${new Date(user.createdAt).toLocaleDateString()}</p>
+                                </div>
+                                <div class="btn-group">
+                                    <button class="btn btn-success" onclick="approveUser('${child.key}')">
+                                        <i class="fas fa-check"></i> Approve
+                                    </button>
+                                    <button class="btn btn-danger" onclick="rejectUser('${child.key}')">
+                                        <i class="fas fa-times"></i> Reject
+                                    </button>
+                                </div>
+                            </div>
+                        `;
+                    }
+                });
+                
+                if (!hasPending) {
+                    list.innerHTML = '<p style="text-align:center; color: #888;">No pending approvals</p>';
+                }
+            });
+        }
+
+        function approveUser(userId) {
+            if (confirm('Approve this user?')) {
+                db.ref(`users/${userId}`).update({ status: 'active' }).then(() => {
+                    showToast('User approved successfully!');
+                });
+            }
+        }
+
+        function rejectUser(userId) {
+            if (confirm('Reject and delete this user?')) {
+                db.ref(`users/${userId}`).remove().then(() => {
+                    showToast('User rejected and deleted!');
+                });
+            }
+        }
+
+        function suspendUser(userId) {
+            if (confirm('Suspend this user?')) {
+                db.ref(`users/${userId}`).update({ status: 'suspended' }).then(() => {
+                    showToast('User suspended!');
+                });
+            }
+        }
+
+        function deleteUser(userId) {
+            if (confirm('Permanently delete this user? This cannot be undone!')) {
+                db.ref(`users/${userId}`).remove().then(() => {
+                    showToast('User deleted!');
+                });
+            }
+        }
+
+        // User Management
+        function showAddUserModal() {
+            document.getElementById('addUserModal').classList.add('active');
+        }
+
+        function closeAddUserModal() {
+            document.getElementById('addUserModal').classList.remove('active');
+        }
+
+        function addUser(e) {
+            e.preventDefault();
+            
+            const name = document.getElementById('userName').value;
+            const email = document.getElementById('userEmail').value;
+            const phone = document.getElementById('userPhone').value;
+            const profilePic = document.getElementById('userProfilePic').value || 'https://via.placeholder.com/150/00ff00/0a0a0a?text=User';
+            const username = sanitize(document.getElementById('userUsername').value);
+            const password = document.getElementById('userPassword').value;
+            const plan = document.getElementById('userPlan').value;
+            const paymentMethod = document.getElementById('userPayment').value;
+
+            const now = Date.now();
+            let expiry = null;
+            
+            if (plan === 'Basic') expiry = now + (7 * 24 * 60 * 60 * 1000);
+            else if (plan === 'Pro') expiry = now + (30 * 24 * 60 * 60 * 1000);
+            else if (plan === 'Ultimate') expiry = now + (365 * 24 * 60 * 60 * 1000);
+
+            const userData = {
+                name, email, phone, profilePic, username, password,
+                plan, paymentMethod,
+                status: 'active',
+                planExpiry: expiry,
+                createdAt: now
+            };
+
+            db.ref(`users/${username}`).set(userData).then(() => {
+                showToast('User added successfully!');
+                closeAddUserModal();
+                document.getElementById('addUserModal').querySelector('form').reset();
+            }).catch(err => showToast('Error: ' + err.message));
+        }
+
+        function showEditUserModal(userId) {
+            db.ref(`users/${userId}`).once('value').then(snapshot => {
+                const user = snapshot.val();
+                
+                document.getElementById('editUserId').value = userId;
+                document.getElementById('editUserName').value = user.name;
+                document.getElementById('editUserEmail').value = user.email;
+                document.getElementById('editUserPhone').value = user.phone;
+                document.getElementById('editUserProfilePic').value = user.profilePic;
+                document.getElementById('editUserPlan').value = user.plan;
+                document.getElementById('editUserPayment').value = user.paymentMethod;
+                
+                document.getElementById('editUserModal').classList.add('active');
+            });
+        }
+
+        function closeEditUserModal() {
+            document.getElementById('editUserModal').classList.remove('active');
+        }
+
+        function updateUser(e) {
+            e.preventDefault();
+            
+            const userId = document.getElementById('editUserId').value;
+            const name = document.getElementById('editUserName').value;
+            const email = document.getElementById('editUserEmail').value;
+            const phone = document.getElementById('editUserPhone').value;
+            const profilePic = document.getElementById('editUserProfilePic').value;
+            const plan = document.getElementById('editUserPlan').value;
+            const paymentMethod = document.getElementById('editUserPayment').value;
+
+            const now = Date.now();
+            let expiry = null;
+            
+            if (plan === 'Basic') expiry = now + (7 * 24 * 60 * 60 * 1000);
+            else if (plan === 'Pro') expiry = now + (30 * 24 * 60 * 60 * 1000);
+            else if (plan === 'Ultimate') expiry = now + (365 * 24 * 60 * 60 * 1000);
+
+            db.ref(`users/${userId}`).update({
+                name, email, phone, profilePic, plan, paymentMethod, planExpiry: expiry
+            }).then(() => {
+                showToast('User updated successfully!');
+                closeEditUserModal();
+            }).catch(err => showToast('Error: ' + err.message));
+        }
+
+        // Content Management
+        function loadContent(type) {
+            db.ref(`content/${type}`).on('value', snapshot => {
+                const list = document.getElementById(`${type}List`);
+                list.innerHTML = '';
+                
+                if (!snapshot.exists()) {
+                    list.innerHTML = '<p style="text-align:center; color: #888;">No content available</p>';
+                    return;
+                }
+                
+                snapshot.forEach(child => {
+                    const item = child.val();
+                    let extraInfo = '';
+                    
+                    if (type === 'sourceCode' && item.demoUrl) {
+                        extraInfo = `<p><i class="fas fa-link"></i> Demo: <a href="${item.demoUrl}" target="_blank" style="color: #00b341;">${item.demoUrl}</a></p>`;
+                    }
+                    if (type === 'tools') {
+                        extraInfo = `<p><i class="fas fa-cog"></i> Type: ${item.toolType === 'direct' ? 'Direct Link' : 'Details + Download'}</p>`;
+                    }
+                    
+                    list.innerHTML += `
+                        <div class="content-card">
+                            <img src="${item.thumbnail}" alt="${item.title}">
+                            <div class="content-info">
+                                <h4>${item.title} <span class="badge badge-${item.accessType === 'Free' ? 'free' : 'paid'}">${item.accessType}</span></h4>
+                                <p>${item.description.substring(0, 150)}...</p>
+                                <p><i class="fas fa-tag"></i> Category: ${item.category}</p>
+                                ${extraInfo}
+                                <p><i class="fas fa-download"></i> <a href="${item.downloadLink}" target="_blank" style="color: #00b341;">${item.downloadLink}</a></p>
+                            </div>
+                            <div class="btn-group">
+                                <button class="btn btn-info" onclick="editContent('${child.key}', '${type}')">
+                                    <i class="fas fa-edit"></i> Edit
+                                </button>
+                                <button class="btn btn-danger" onclick="deleteContent('${child.key}', '${type}')">
+                                    <i class="fas fa-trash"></i> Delete
+                                </button>
+                            </div>
+                        </div>
+                    `;
+                });
+            });
+        }
+
+        function showAddContentModal(type) {
+            document.getElementById('contentModalTitle').innerHTML = '<i class="fas fa-plus"></i> Add Content';
+            document.getElementById('contentId').value = '';
+            document.getElementById('contentType').value = type;
+            document.getElementById('contentTitle').value = '';
+            document.getElementById('contentThumbnail').value = '';
+            document.getElementById('contentDescription').value = '';
+            document.getElementById('contentCategory').value = '';
+            document.getElementById('contentDemoUrl').value = '';
+            document.getElementById('contentDownloadLink').value = '';
+            document.getElementById('contentAccessType').value = 'Free';
+            document.getElementById('toolType').value = 'details';
+            
+            if (type === 'sourceCode') {
+                document.getElementById('demoUrlGroup').style.display = 'block';
+                document.getElementById('toolTypeGroup').style.display = 'none';
+            } else if (type === 'tools') {
+                document.getElementById('demoUrlGroup').style.display = 'none';
+                document.getElementById('toolTypeGroup').style.display = 'block';
+            } else {
+                document.getElementById('demoUrlGroup').style.display = 'none';
+                document.getElementById('toolTypeGroup').style.display = 'none';
+            }
+            
+            document.getElementById('addContentModal').classList.add('active');
+        }
+
+        function editContent(id, type) {
+            db.ref(`content/${type}/${id}`).once('value').then(snapshot => {
+                const item = snapshot.val();
+                
+                document.getElementById('contentModalTitle').innerHTML = '<i class="fas fa-edit"></i> Edit Content';
+                document.getElementById('contentId').value = id;
+                document.getElementById('contentType').value = type;
+                document.getElementById('contentTitle').value = item.title;
+                document.getElementById('contentThumbnail').value = item.thumbnail;
+                document.getElementById('contentDescription').value = item.description;
+                document.getElementById('contentCategory').value = item.category;
+                document.getElementById('contentDemoUrl').value = item.demoUrl || '';
+                document.getElementById('contentDownloadLink').value = item.downloadLink;
+                document.getElementById('contentAccessType').value = item.accessType;
+                
+                if (type === 'sourceCode') {
+                    document.getElementById('demoUrlGroup').style.display = 'block';
+                    document.getElementById('toolTypeGroup').style.display = 'none';
+                } else if (type === 'tools') {
+                    document.getElementById('demoUrlGroup').style.display = 'none';
+                    document.getElementById('toolTypeGroup').style.display = 'block';
+                    document.getElementById('toolType').value = item.toolType || 'details';
+                } else {
+                    document.getElementById('demoUrlGroup').style.display = 'none';
+                    document.getElementById('toolTypeGroup').style.display = 'none';
+                }
+                
+                document.getElementById('addContentModal').classList.add('active');
+            });
+        }
+
+        function closeAddContentModal() {
+            document.getElementById('addContentModal').classList.remove('active');
+        }
+
+        function saveContent(e) {
+            e.preventDefault();
+            
+            const id = document.getElementById('contentId').value;
+            const type = document.getElementById('contentType').value;
+            
+            const data = {
+                title: document.getElementById('contentTitle').value,
+                thumbnail: document.getElementById('contentThumbnail').value,
+                description: document.getElementById('contentDescription').value,
+                category: document.getElementById('contentCategory').value,
+                downloadLink: document.getElementById('contentDownloadLink').value,
+                accessType: document.getElementById('contentAccessType').value,
+                createdAt: Date.now()
+            };
+
+            if (type === 'sourceCode') {
+                data.demoUrl = document.getElementById('contentDemoUrl').value;
+            } else if (type === 'tools') {
+                data.toolType = document.getElementById('toolType').value;
+            }
+
+            if (id) {
+                db.ref(`content/${type}/${id}`).update(data).then(() => {
+                    showToast('Content updated successfully!');
+                    closeAddContentModal();
+                });
+            } else {
+                db.ref(`content/${type}`).push(data).then(() => {
+                    showToast('Content added successfully!');
+                    closeAddContentModal();
+                });
+            }
+        }
+
+        function deleteContent(id, type) {
+            if (confirm('Delete this content? This cannot be undone!')) {
+                db.ref(`content/${type}/${id}`).remove().then(() => {
+                    showToast('Content deleted!');
+                });
+            }
+        }
+
+        // Notifications
+        function sendNotification(e) {
+            e.preventDefault();
+            
+            const target = document.getElementById('notifTarget').value;
+            const message = document.getElementById('notifMessage').value;
+            
+            const notification = {
+                userId: target,
+                message: message,
+                timestamp: Date.now()
+            };
+
+            db.ref('notifications').push(notification).then(() => {
+                showToast('Notification sent successfully!');
+                document.getElementById('notifMessage').value = '';
+            });
+        }
+
+        // Settings
+        function loadSettings() {
+            db.ref('settings').once('value').then(snapshot => {
+                if (snapshot.exists()) {
+                    const settings = snapshot.val();
+                    document.getElementById('settingVideo').value = settings.videoUrl || '';
+                    document.getElementById('settingSlide1').value = settings.slide1 || '';
+                    document.getElementById('settingSlide2').value = settings.slide2 || '';
+                    document.getElementById('settingSlide3').value = settings.slide3 || '';
+                    document.getElementById('settingWhatsApp').value = settings.whatsapp || '';
+                    document.getElementById('settingEmail').value = settings.email || '';
+                    document.getElementById('settingYoutube').value = settings.youtube || '';
+                }
+            });
+        }
+
+        function saveSettings(e) {
+            e.preventDefault();
+            
+            const settings = {
+                videoUrl: document.getElementById('settingVideo').value,
+                slide1: document.getElementById('settingSlide1').value,
+                slide2: document.getElementById('settingSlide2').value,
+                slide3: document.getElementById('settingSlide3').value,
+                whatsapp: document.getElementById('settingWhatsApp').value,
+                email: document.getElementById('settingEmail').value,
+                youtube: document.getElementById('settingYoutube').value
+            };
+
+            db.ref('settings').set(settings).then(() => {
+                showToast('Settings saved successfully!');
+            });
+        }
+
+        // Navigation
+        function navigate(section) {
+            document.querySelectorAll('.sidebar-menu a').forEach(a => a.classList.remove('active'));
+            event.currentTarget.classList.add('active');
+            
+            document.querySelectorAll('.page-section').forEach(sec => sec.classList.remove('active'));
+            
+            const sectionMap = {
+                'dashboard': 'dashboardSection',
+                'users': 'usersSection',
+                'pending': 'pendingSection',
+                'sourceCode': 'sourceCodeSection',
+                'courses': 'coursesSection',
+                'tools': 'toolsSection',
+                'notifications': 'notificationsSection',
+                'settings': 'settingsSection'
+            };
+            
+            document.getElementById(sectionMap[section]).classList.add('active');
+            
+            if (window.innerWidth <= 1024) {
+                toggleSidebar();
+            }
+        }
+
+        function toggleSidebar() {
+            document.getElementById('sidebar').classList.toggle('active');
+        }
+
+        function logout() {
+            if (confirm('Logout from admin panel?')) {
+                location.reload();
+            }
+        }
+
+        function showToast(message) {
+            const toast = document.getElementById('toast');
+            toast.textContent = message;
+            toast.classList.add('show');
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 3000);
+        }
+    </script>
+</body>
+</html>
