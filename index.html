@@ -71,8 +71,26 @@
             font-weight: 700;
             text-shadow: 2px 2px 4px rgba(255,255,255,1);
             margin-bottom: 10px;
+            animation: text-glow 2s infinite;
         }
 
+        @keyframes text-glow {
+    0% {
+      color: pink;
+    }
+    33% {
+      color: #00FF00;
+    }
+    66% {
+      color: #FFFF00;
+    }
+    100% {
+      color: #FF0000;
+    }
+    133% {
+      color: #0000FF;
+    }
+        }
         .logo-section p {
             color: #666;
             font-size: 1.2rem;
