@@ -812,6 +812,24 @@
                 grid-template-columns: 1fr;
             }
         }
+
+        .carousel-inner {
+  height: 400px; /* apni marzi */
+}
+
+.carousel-img {
+  height: 100%;
+  object-fit: cover;
+}
+
+        .carousel-item {
+  transition: transform 1s ease-in-out;
+}
+
+        #carouselExampleAutoplaying {
+  margin-top: 80px;
+}
+
     </style>
 </head>
 <body>
@@ -828,6 +846,29 @@
                 <source src="codeing.lover.mp4">
             </video>
         </div>
+<div id="carouselExampleAutoplaying"
+     class="carousel slide carousel-fade"
+     data-bs-ride="carousel"
+     data-bs-interval="3000"
+     data-bs-pause="false"
+     data-bs-wrap="true">
+
+  <div class="carousel-inner">
+
+    <div class="carousel-item active">
+      <img src="img/slide1.jpg" class="d-block w-100 carousel-img" alt="">
+    </div>
+
+    <div class="carousel-item">
+      <img src="img/slide2.jpg" class="d-block w-100 carousel-img" alt="">
+    </div>
+
+    <div class="carousel-item">
+      <img src="img/slide3.jpg" class="d-block w-100 carousel-img" alt="">
+    </div>
+
+  </div>
+</div>
 
         <button class="btn-primary" onclick="showRegister()">Get Started</button>
     </div>
